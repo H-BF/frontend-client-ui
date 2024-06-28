@@ -292,7 +292,9 @@ export const NetworkEditModal: FC<TNetworkEditModalProps> = ({
         <Spacer $space={4} $samespace />
         <Styled.ResetedFormItem name="securityGroup" validateTrigger="onBlur">
           <Select
-            options={options.map(({ name }) => ({ label: name, value: name }))}
+            options={options
+              .map(({ name }) => ({ label: name, value: name }))
+              .sort((a, b) => a.label.localeCompare(b.label))}
             placeholder="Select security group"
             size="large"
             allowClear
