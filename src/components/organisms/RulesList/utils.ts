@@ -17,6 +17,22 @@ import {
   TFormChanges,
 } from 'localTypes/rules'
 
+export const getSectionName = (type: string): string => {
+  if (type === 'sgSg') {
+    return 'SG-SG'
+  }
+  if (type === 'sgSgIe') {
+    return 'SG-SG (I/E)'
+  }
+  if (type === 'sgCidr') {
+    return 'SG-CIDR (I/E)'
+  }
+  if (type === 'sgFqdn') {
+    return 'SG-FQDN (E)'
+  }
+  return ''
+}
+
 export const mapRulesSgSg = (rules: TSgSgRule[], type: 'Ingress' | 'Egress'): TFormSgSgRule[] => {
   return rules.map(({ sgFrom, sgTo, transport, ports, logs, action, priority }) => ({
     id: nanoid(),

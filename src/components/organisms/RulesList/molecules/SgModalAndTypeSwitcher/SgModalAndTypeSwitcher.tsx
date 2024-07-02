@@ -9,16 +9,14 @@ import { getSecurityGroupByName } from 'api/securityGroups'
 import { TSecurityGroup } from 'localTypes/securityGroups'
 import { TRequestErrorData, TRequestError } from 'localTypes/api'
 import { filterSgName } from 'utils/filterSgName'
-import { GroupRulesNodeWrapper } from '../../atoms'
 import { TFieldData } from './types'
 import { Styled } from './styled'
 
-type TSelectCenterSgProps = {
+type TSgModalAndTypeSwitcherProps = {
   onSelectCenterSg: (value?: string) => void
-  notInTransformBlock?: boolean
 }
 
-export const SelectCenterSg: FC<TSelectCenterSgProps> = ({ onSelectCenterSg, notInTransformBlock }) => {
+export const SgModalAndTypeSwitcher: FC<TSgModalAndTypeSwitcherProps> = ({ onSelectCenterSg }) => {
   const [curValues, setCurValues] = useState<TFieldData[]>([{ name: 'name', value: undefined }])
   const [securityGroup, setSecurityGroup] = useState<TSecurityGroup>()
   const [error, setError] = useState<TRequestError | undefined>()
@@ -63,14 +61,8 @@ export const SelectCenterSg: FC<TSelectCenterSgProps> = ({ onSelectCenterSg, not
   }, [centerSg])
 
   return (
-    <GroupRulesNodeWrapper $notInTransformBlock={notInTransformBlock} $isCenterSg>
+    <>
       <TitleWithNoTopMargin level={4}>Main SG</TitleWithNoTopMargin>
-      {!notInTransformBlock && (
-        <Styled.Directions>
-          <Typography.Text type="secondary">Ingress</Typography.Text>
-          <Typography.Text type="secondary">Egress</Typography.Text>
-        </Styled.Directions>
-      )}
       <Spacer $space={10} $samespace />
       <Form
         fields={curValues}
@@ -106,6 +98,6 @@ export const SelectCenterSg: FC<TSelectCenterSgProps> = ({ onSelectCenterSg, not
       {securityGroup && (
         <Typography.Text type="secondary">Default Action: {securityGroup.defaultAction}</Typography.Text>
       )}
-    </GroupRulesNodeWrapper>
+    </>
   )
 }

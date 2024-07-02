@@ -9,6 +9,6 @@ type TSelectCenterSgModalProps = {
 
 export const SelectCenterSgModal: FC<TSelectCenterSgModalProps> = ({ isOpen, handleOk, handleCancel }) => (
   <Modal title="You have unsaved changes" open={isOpen} onOk={handleOk} onCancel={handleCancel}>
-    Are you sure you want to change center SG?
+    Are you sure you want to change security group?
   </Modal>
 )
