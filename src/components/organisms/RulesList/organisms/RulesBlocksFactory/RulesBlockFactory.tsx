@@ -1,5 +1,4 @@
 import React, { FC } from 'react'
-import { TooltipPlacement } from 'antd/es/tooltip'
 import { useSelector } from 'react-redux'
 import type { RootState } from 'store/store'
 import { setRulesSgSgFrom, setRulesSgSgTo } from 'store/editor/rulesSgSg/rulesSgSg'
@@ -34,24 +33,13 @@ import { RULES_CONFIGS } from '../../constants'
 import { RulesBlock } from './molecules'
 
 type TRulesBlockFactoryProps = {
-  popoverPosition: TooltipPlacement
   title: string
   type: TRulesTypes
   subtype: TRulesSubTypes
   isDisabledDefault?: boolean
-  forceArrowsUpdate?: () => void
-  addpopoverPosition?: TooltipPlacement
 }
 
-export const RulesBlockFactory: FC<TRulesBlockFactoryProps> = ({
-  forceArrowsUpdate,
-  title,
-  popoverPosition,
-  addpopoverPosition,
-  isDisabledDefault,
-  type,
-  subtype,
-}) => {
+export const RulesBlockFactory: FC<TRulesBlockFactoryProps> = ({ title, isDisabledDefault, type, subtype }) => {
   const centerSg = useSelector((state: RootState) => state.centerSg.centerSg)
   const rulesSgSgFrom = useSelector((state: RootState) => state.rulesSgSg.rulesFrom)
   const rulesSgSgTo = useSelector((state: RootState) => state.rulesSgSg.rulesTo)
@@ -73,15 +61,12 @@ export const RulesBlockFactory: FC<TRulesBlockFactoryProps> = ({
     return (
       <RulesBlock<TFormSgSgRule>
         title={title}
-        popoverPosition={addpopoverPosition || popoverPosition}
         table={
           <SgSgTable
             direction={subtype}
             isChangesMode={false}
             rulesData={subtype === 'from' ? rulesSgSgFrom : rulesSgSgTo}
-            popoverPosition={popoverPosition}
             isDisabled={isDisabled}
-            forceArrowsUpdate={forceArrowsUpdate}
           />
         }
         ruleConfig={RULES_CONFIGS.sgSg}
@@ -101,15 +86,12 @@ export const RulesBlockFactory: FC<TRulesBlockFactoryProps> = ({
     return (
       <RulesBlock<TFormSgSgIcmpRule>
         title={title}
-        popoverPosition={addpopoverPosition || popoverPosition}
         table={
           <SgSgIcmpTable
             direction={subtype}
             isChangesMode={false}
-            popoverPosition={popoverPosition}
             rulesData={subtype === 'from' ? rulesSgSgIcmpFrom : rulesSgSgIcmpTo}
             isDisabled={isDisabled}
-            forceArrowsUpdate={forceArrowsUpdate}
           />
         }
         ruleConfig={RULES_CONFIGS.sgSgIcmp}
@@ -129,15 +111,12 @@ export const RulesBlockFactory: FC<TRulesBlockFactoryProps> = ({
     return (
       <RulesBlock<TFormSgSgIeRule>
         title={title}
-        popoverPosition={addpopoverPosition || popoverPosition}
         table={
           <SgSgIeTable
             direction={subtype}
             isChangesMode={false}
-            popoverPosition={popoverPosition}
             rulesData={subtype === 'from' ? rulesSgSgIeFrom : rulesSgSgIeTo}
             isDisabled={isDisabled}
-            forceArrowsUpdate={forceArrowsUpdate}
           />
         }
         ruleConfig={RULES_CONFIGS.sgSgIe}
@@ -153,15 +132,12 @@ export const RulesBlockFactory: FC<TRulesBlockFactoryProps> = ({
     return (
       <RulesBlock<TFormSgSgIeIcmpRule>
         title={title}
-        popoverPosition={addpopoverPosition || popoverPosition}
         table={
           <SgSgIeIcmpTable
             direction={subtype}
             isChangesMode={false}
-            popoverPosition={popoverPosition}
             rulesData={subtype === 'from' ? rulesSgSgIeIcmpFrom : rulesSgSgIeIcmpTo}
             isDisabled={isDisabled}
-            forceArrowsUpdate={forceArrowsUpdate}
           />
         }
         ruleConfig={RULES_CONFIGS.sgSgIeIcmp}
@@ -176,14 +152,11 @@ export const RulesBlockFactory: FC<TRulesBlockFactoryProps> = ({
     return (
       <RulesBlock<TFormSgFqdnRule>
         title={title}
-        popoverPosition={addpopoverPosition || popoverPosition}
         table={
           <SgFqdnTable
             direction={subtype}
             isChangesMode={false}
             rulesData={subtype === 'from' ? [] : rulesSgFqdnTo}
-            popoverPosition={popoverPosition}
-            forceArrowsUpdate={forceArrowsUpdate}
             isDisabled={isDisabled}
           />
         }
@@ -199,14 +172,11 @@ export const RulesBlockFactory: FC<TRulesBlockFactoryProps> = ({
     return (
       <RulesBlock<TFormSgCidrRule>
         title={title}
-        popoverPosition={addpopoverPosition || popoverPosition}
         table={
           <SgCidrTable
             direction={subtype}
             isChangesMode={false}
             rulesData={subtype === 'from' ? rulesSgCidrFrom : rulesSgCidrTo}
-            popoverPosition={popoverPosition}
-            forceArrowsUpdate={forceArrowsUpdate}
             isDisabled={isDisabled}
           />
         }
@@ -222,15 +192,12 @@ export const RulesBlockFactory: FC<TRulesBlockFactoryProps> = ({
   return (
     <RulesBlock<TFormSgCidrIcmpRule>
       title={title}
-      popoverPosition={addpopoverPosition || popoverPosition}
       table={
         <SgCidrIcmpTable
           direction={subtype}
           isChangesMode={false}
-          popoverPosition={popoverPosition}
           rulesData={subtype === 'from' ? rulesSgCidrIcmpFrom : rulesSgCidrIcmpTo}
           isDisabled={isDisabled}
-          forceArrowsUpdate={forceArrowsUpdate}
         />
       }
       ruleConfig={RULES_CONFIGS.sgCidrIcmp}

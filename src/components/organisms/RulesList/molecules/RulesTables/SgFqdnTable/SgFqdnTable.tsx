@@ -24,10 +24,8 @@ export const SgFqdnTable: FC<TSgFqdnTableProps> = ({
   direction,
   isChangesMode,
   rulesData,
-  popoverPosition,
   isDisabled,
   isRestoreButtonActive,
-  forceArrowsUpdate,
 }) => {
   const dispatch = useDispatch()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -169,7 +167,6 @@ export const SgFqdnTable: FC<TSgFqdnTableProps> = ({
               trigger="click"
               open={editOpen[index]}
               onOpenChange={() => toggleEditPopover(index)}
-              placement={popoverPosition}
               className="no-scroll"
             >
               <Button type="primary">Edit</Button>
@@ -202,7 +199,7 @@ export const SgFqdnTable: FC<TSgFqdnTableProps> = ({
     setSelectedRowKeys,
   )
 
-  const defaultTableProps = getDefaultTableProps(forceArrowsUpdate)
+  const defaultTableProps = getDefaultTableProps()
 
   return (
     <ThWhiteSpaceNoWrap>

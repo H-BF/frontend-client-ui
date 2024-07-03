@@ -39,12 +39,10 @@ type TRulesBlockFactoryProps = {
   type: TRulesTypes
   subtype: TRulesSubTypes
   isDisabledDefault?: boolean
-  forceArrowsUpdate?: () => void
   addpopoverPosition?: TooltipPlacement
 }
 
 export const RulesBlockFactory: FC<TRulesBlockFactoryProps> = ({
-  forceArrowsUpdate,
   title,
   popoverPosition,
   addpopoverPosition,
@@ -79,9 +77,7 @@ export const RulesBlockFactory: FC<TRulesBlockFactoryProps> = ({
             direction={subtype}
             isChangesMode={false}
             rulesData={subtype === 'from' ? rulesSgSgFrom : rulesSgSgTo}
-            popoverPosition={popoverPosition}
             isDisabled={isDisabled}
-            forceArrowsUpdate={forceArrowsUpdate}
           />
         }
         ruleConfig={RULES_CONFIGS.sgSg}
@@ -106,10 +102,8 @@ export const RulesBlockFactory: FC<TRulesBlockFactoryProps> = ({
           <SgSgIcmpTable
             direction={subtype}
             isChangesMode={false}
-            popoverPosition={popoverPosition}
             rulesData={subtype === 'from' ? rulesSgSgIcmpFrom : rulesSgSgIcmpTo}
             isDisabled={isDisabled}
-            forceArrowsUpdate={forceArrowsUpdate}
           />
         }
         ruleConfig={RULES_CONFIGS.sgSgIcmp}
@@ -134,10 +128,8 @@ export const RulesBlockFactory: FC<TRulesBlockFactoryProps> = ({
           <SgSgIeTable
             direction={subtype}
             isChangesMode={false}
-            popoverPosition={popoverPosition}
             rulesData={subtype === 'from' ? rulesSgSgIeFrom : rulesSgSgIeTo}
             isDisabled={isDisabled}
-            forceArrowsUpdate={forceArrowsUpdate}
           />
         }
         ruleConfig={RULES_CONFIGS.sgSgIe}
@@ -158,10 +150,8 @@ export const RulesBlockFactory: FC<TRulesBlockFactoryProps> = ({
           <SgSgIeIcmpTable
             direction={subtype}
             isChangesMode={false}
-            popoverPosition={popoverPosition}
             rulesData={subtype === 'from' ? rulesSgSgIeIcmpFrom : rulesSgSgIeIcmpTo}
             isDisabled={isDisabled}
-            forceArrowsUpdate={forceArrowsUpdate}
           />
         }
         ruleConfig={RULES_CONFIGS.sgSgIeIcmp}
@@ -183,8 +173,6 @@ export const RulesBlockFactory: FC<TRulesBlockFactoryProps> = ({
             direction={subtype}
             isChangesMode={false}
             rulesData={subtype === 'from' ? [] : rulesSgFqdnTo}
-            popoverPosition={popoverPosition}
-            forceArrowsUpdate={forceArrowsUpdate}
             isDisabled={isDisabled}
           />
         }
@@ -206,8 +194,6 @@ export const RulesBlockFactory: FC<TRulesBlockFactoryProps> = ({
             direction={subtype}
             isChangesMode={false}
             rulesData={subtype === 'from' ? rulesSgCidrFrom : rulesSgCidrTo}
-            popoverPosition={popoverPosition}
-            forceArrowsUpdate={forceArrowsUpdate}
             isDisabled={isDisabled}
           />
         }
@@ -228,10 +214,8 @@ export const RulesBlockFactory: FC<TRulesBlockFactoryProps> = ({
         <SgCidrIcmpTable
           direction={subtype}
           isChangesMode={false}
-          popoverPosition={popoverPosition}
           rulesData={subtype === 'from' ? rulesSgCidrIcmpFrom : rulesSgCidrIcmpTo}
           isDisabled={isDisabled}
-          forceArrowsUpdate={forceArrowsUpdate}
         />
       }
       ruleConfig={RULES_CONFIGS.sgCidrIcmp}

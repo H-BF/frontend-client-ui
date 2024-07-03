@@ -1,7 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import React, { FC, useState, useEffect, useCallback } from 'react'
-import { Button, Result, Spin, notification } from 'antd'
-import { TrashSimple, MagnifyingGlass, X } from '@phosphor-icons/react'
+import { Result, Spin } from 'antd'
 import { AxiosError } from 'axios'
 import { useSelector, useDispatch } from 'react-redux'
 import type { RootState } from 'store/store'
@@ -40,9 +39,7 @@ import {
   getSectionName,
 } from './utils'
 import { SelectCenterSgModal } from './atoms'
-import { SgModalAndTypeSwitcher } from './molecules'
 import { RulesByType } from './populations'
-import { Styled } from './styled'
 
 type TRulesListProps = {
   typeId: string
@@ -50,15 +47,9 @@ type TRulesListProps = {
 
 export const RulesList: FC<TRulesListProps> = ({ typeId }) => {
   const dispatch = useDispatch()
-  const [api, contextHolder] = notification.useNotification()
 
   const [error, setError] = useState<TRequestError | undefined>()
   const [isLoading, setIsLoading] = useState<boolean>(false)
-
-  const [searchText, setSearchText] = useState('')
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
-
-  const [isModalDeleteOpen, setIsModalDeleteOpen] = useState<boolean>(false)
 
   const [isChangeCenterSgModalVisible, setChangeCenterSgModalVisible] = useState<boolean>(false)
   const [pendingSg, setPendingSg] = useState<string>()
@@ -237,17 +228,6 @@ export const RulesList: FC<TRulesListProps> = ({ typeId }) => {
     }
   }
 
-  const openNotification = (msg: string) => {
-    api.success({
-      message: msg,
-      placement: 'topRight',
-    })
-  }
-
-  const clearSelected = () => {
-    setSelectedRowKeys([])
-  }
-
   if (error) {
     return (
       <MiddleContainer>
@@ -261,44 +241,12 @@ export const RulesList: FC<TRulesListProps> = ({ typeId }) => {
       <Layouts.HeaderRow>
         <TitleWithNoMargins level={3}>{getSectionName(typeId)}</TitleWithNoMargins>
       </Layouts.HeaderRow>
-      <Layouts.ControlsRow>
-        <Layouts.ControlsRightSide>
-          {selectedRowKeys.length > 0 ? (
-            <>
-              <Styled.SelectedItemsText>Selected Rules: {selectedRowKeys.length}</Styled.SelectedItemsText>
-              <Button type="text" icon={<X size={16} color="#00000073" />} onClick={clearSelected} />
-            </>
-          ) : (
-            <SgModalAndTypeSwitcher onSelectCenterSg={onSelectCenterSg} />
-          )}
-          <Layouts.Separator />
-          <Button
-            disabled={selectedRowKeys.length === 0}
-            type="text"
-            icon={<TrashSimple size={18} />}
-            onClick={() => setIsModalDeleteOpen(true)}
-          />
-        </Layouts.ControlsRightSide>
-        <Layouts.ControlsLeftSide>
-          <Layouts.SearchControl>
-            <Layouts.InputWithCustomPreffixMargin
-              allowClear
-              placeholder="Search"
-              prefix={<MagnifyingGlass color="#00000073" />}
-              value={searchText}
-              onChange={e => {
-                setSearchText(e.target.value)
-              }}
-            />
-          </Layouts.SearchControl>
-        </Layouts.ControlsLeftSide>
-      </Layouts.ControlsRow>
       {isLoading && (
         <MiddleContainer>
           <Spin />
         </MiddleContainer>
       )}
-      <RulesByType typeId={typeId} searchText={searchText} />
+      {!isLoading && <RulesByType typeId={typeId} onSelectCenterSg={onSelectCenterSg} />}
       <SelectCenterSgModal
         isOpen={isChangeCenterSgModalVisible}
         handleOk={() => {
@@ -308,7 +256,6 @@ export const RulesList: FC<TRulesListProps> = ({ typeId }) => {
         }}
         handleCancel={() => setChangeCenterSgModalVisible(false)}
       />
-      {contextHolder}
     </>
   )
 }

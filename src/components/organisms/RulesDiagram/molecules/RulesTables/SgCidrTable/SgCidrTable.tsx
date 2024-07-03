@@ -25,10 +25,8 @@ export const SgCidrTable: FC<TSgCidrTableProps> = ({
   direction,
   isChangesMode,
   rulesData,
-  popoverPosition,
   isDisabled,
   isRestoreButtonActive,
-  forceArrowsUpdate,
 }) => {
   const dispatch = useDispatch()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -187,7 +185,6 @@ export const SgCidrTable: FC<TSgCidrTableProps> = ({
               trigger="click"
               open={editOpen[index]}
               onOpenChange={() => toggleEditPopover(index)}
-              placement={popoverPosition}
               className="no-scroll"
             >
               <Button type="primary">Edit</Button>
@@ -220,7 +217,7 @@ export const SgCidrTable: FC<TSgCidrTableProps> = ({
     setSelectedRowKeys,
   )
 
-  const defaultTableProps = getDefaultTableProps(forceArrowsUpdate)
+  const defaultTableProps = getDefaultTableProps()
 
   return (
     <ThWhiteSpaceNoWrap>

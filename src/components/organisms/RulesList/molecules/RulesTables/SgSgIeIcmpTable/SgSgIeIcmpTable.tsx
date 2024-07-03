@@ -23,11 +23,9 @@ type TColumn = TFormSgSgIeIcmpRule & { key: string }
 export const SgSgIeIcmpTable: FC<TSgSgIeIcmpTableProps> = ({
   direction,
   isChangesMode,
-  popoverPosition,
   rulesData,
   isDisabled,
   isRestoreButtonActive,
-  forceArrowsUpdate,
 }) => {
   const dispatch = useDispatch()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -201,7 +199,6 @@ export const SgSgIeIcmpTable: FC<TSgSgIeIcmpTableProps> = ({
               trigger="click"
               open={editOpen[index]}
               onOpenChange={() => toggleEditPopover(index)}
-              placement={popoverPosition}
               className="no-scroll"
             >
               <Button type="primary">Edit</Button>
@@ -234,7 +231,7 @@ export const SgSgIeIcmpTable: FC<TSgSgIeIcmpTableProps> = ({
     setSelectedRowKeys,
   )
 
-  const defaultTableProps = getDefaultTableProps(forceArrowsUpdate)
+  const defaultTableProps = getDefaultTableProps()
 
   return (
     <ThWhiteSpaceNoWrap>

@@ -1,1 +1,1 @@
-export * from './SgModalAndTypeSwitcher'
+export * from './RulesTables'

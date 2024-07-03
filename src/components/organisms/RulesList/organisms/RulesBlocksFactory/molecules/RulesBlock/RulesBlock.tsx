@@ -1,7 +1,6 @@
 import React, { ReactElement, ReactNode, useState } from 'react'
 import { nanoid } from 'nanoid'
 import { Button, Popover } from 'antd'
-import { TooltipPlacement } from 'antd/es/tooltip'
 import { PlusOutlined } from '@ant-design/icons'
 import { ActionCreatorWithPayload } from '@reduxjs/toolkit'
 import { useDispatch } from 'react-redux'
@@ -9,11 +8,9 @@ import { TitleWithNoTopMargin } from 'components/atoms'
 import { TTraffic } from 'localTypes/rules'
 import { STATUSES } from 'constants/rules'
 import { AddPopover } from '../../../../atoms'
-import { Styled } from './styled'
 
 type TRulesBlockProps<T> = {
   title: string
-  popoverPosition: TooltipPlacement
   table: ReactNode
   ruleConfig: {
     isSg?: boolean
@@ -38,7 +35,6 @@ type TRulesBlockProps<T> = {
 
 export const RulesBlock = <T extends { sg?: string; prioritySome?: string | number }>({
   title,
-  popoverPosition,
   table,
   rules,
   setRules,
@@ -114,13 +110,10 @@ export const RulesBlock = <T extends { sg?: string; prioritySome?: string | numb
         trigger="click"
         open={addOpen}
         onOpenChange={toggleAddPopover}
-        placement={popoverPosition}
       >
-        <Styled.AddButtonContainer>
-          <Button type="dashed" block icon={<PlusOutlined />} disabled={isDisabled}>
-            Add
-          </Button>
-        </Styled.AddButtonContainer>
+        <Button type="dashed" block icon={<PlusOutlined />} disabled={isDisabled}>
+          Add
+        </Button>
       </Popover>
     </>
   )

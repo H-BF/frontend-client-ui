@@ -68,41 +68,22 @@ export const TransformBlockInner: FC<TTransformBlockInnerProps> = ({ onSelectCen
       <Styled.CardsCol>
         <div id={SG_AND_SG_SG_ICMP_FROM_ID}>
           <TcpUdpAndIcmpSwitcher
-            forceArrowsUpdate={forceArrowsUpdate}
-            tcpUdpComponent={
-              <RulesBlockFactory
-                forceArrowsUpdate={forceArrowsUpdate}
-                {...RULES_CONFIGS_FOR_FACTORY.sgSg.from}
-                isDisabledDefault
-              />
-            }
-            icmpComponent={
-              <RulesBlockFactory forceArrowsUpdate={forceArrowsUpdate} {...RULES_CONFIGS_FOR_FACTORY.sgSgIcmp.from} />
-            }
+            tcpUdpComponent={<RulesBlockFactory {...RULES_CONFIGS_FOR_FACTORY.sgSg.from} isDisabledDefault />}
+            icmpComponent={<RulesBlockFactory {...RULES_CONFIGS_FOR_FACTORY.sgSgIcmp.from} />}
           />
         </div>
         <Spacer $space={100} $samespace />
         <div id={SG_SG_IE_AND_SG_SG_IE_ICMP_FROM_ID}>
           <TcpUdpAndIcmpSwitcher
-            forceArrowsUpdate={forceArrowsUpdate}
-            tcpUdpComponent={
-              <RulesBlockFactory forceArrowsUpdate={forceArrowsUpdate} {...RULES_CONFIGS_FOR_FACTORY.sgSgIe.from} />
-            }
-            icmpComponent={
-              <RulesBlockFactory forceArrowsUpdate={forceArrowsUpdate} {...RULES_CONFIGS_FOR_FACTORY.sgSgIeIcmp.from} />
-            }
+            tcpUdpComponent={<RulesBlockFactory {...RULES_CONFIGS_FOR_FACTORY.sgSgIe.from} />}
+            icmpComponent={<RulesBlockFactory {...RULES_CONFIGS_FOR_FACTORY.sgSgIeIcmp.from} />}
           />
         </div>
         <Spacer $space={100} $samespace />
         <div id={CIDR_FROM_ID}>
           <TcpUdpAndIcmpSwitcher
-            forceArrowsUpdate={forceArrowsUpdate}
-            tcpUdpComponent={
-              <RulesBlockFactory forceArrowsUpdate={forceArrowsUpdate} {...RULES_CONFIGS_FOR_FACTORY.sgCidr.from} />
-            }
-            icmpComponent={
-              <RulesBlockFactory forceArrowsUpdate={forceArrowsUpdate} {...RULES_CONFIGS_FOR_FACTORY.sgCidrIcmp.from} />
-            }
+            tcpUdpComponent={<RulesBlockFactory {...RULES_CONFIGS_FOR_FACTORY.sgCidr.from} />}
+            icmpComponent={<RulesBlockFactory {...RULES_CONFIGS_FOR_FACTORY.sgCidrIcmp.from} />}
           />
         </div>
       </Styled.CardsCol>
@@ -114,43 +95,28 @@ export const TransformBlockInner: FC<TTransformBlockInnerProps> = ({ onSelectCen
       <Styled.CardsCol>
         <div id={SG_AND_SG_SG_ICMP_TO_ID}>
           <TcpUdpAndIcmpSwitcher
-            forceArrowsUpdate={forceArrowsUpdate}
-            tcpUdpComponent={
-              <RulesBlockFactory forceArrowsUpdate={forceArrowsUpdate} {...RULES_CONFIGS_FOR_FACTORY.sgSg.to} />
-            }
-            icmpComponent={
-              <RulesBlockFactory forceArrowsUpdate={forceArrowsUpdate} {...RULES_CONFIGS_FOR_FACTORY.sgSgIcmp.to} />
-            }
+            tcpUdpComponent={<RulesBlockFactory {...RULES_CONFIGS_FOR_FACTORY.sgSg.to} />}
+            icmpComponent={<RulesBlockFactory {...RULES_CONFIGS_FOR_FACTORY.sgSgIcmp.to} />}
           />
         </div>
         <Spacer $space={100} $samespace />
         <div id={SG_SG_IE_AND_SG_SG_IE_ICMP_TO_ID}>
           <TcpUdpAndIcmpSwitcher
-            forceArrowsUpdate={forceArrowsUpdate}
-            tcpUdpComponent={
-              <RulesBlockFactory forceArrowsUpdate={forceArrowsUpdate} {...RULES_CONFIGS_FOR_FACTORY.sgSgIe.to} />
-            }
-            icmpComponent={
-              <RulesBlockFactory forceArrowsUpdate={forceArrowsUpdate} {...RULES_CONFIGS_FOR_FACTORY.sgSgIeIcmp.to} />
-            }
+            tcpUdpComponent={<RulesBlockFactory {...RULES_CONFIGS_FOR_FACTORY.sgSgIe.to} />}
+            icmpComponent={<RulesBlockFactory {...RULES_CONFIGS_FOR_FACTORY.sgSgIeIcmp.to} />}
           />
         </div>
         <Spacer $space={100} $samespace />
         <div id={CIDR_TO_ID}>
           <TcpUdpAndIcmpSwitcher
-            forceArrowsUpdate={forceArrowsUpdate}
-            tcpUdpComponent={
-              <RulesBlockFactory forceArrowsUpdate={forceArrowsUpdate} {...RULES_CONFIGS_FOR_FACTORY.sgCidr.to} />
-            }
-            icmpComponent={
-              <RulesBlockFactory forceArrowsUpdate={forceArrowsUpdate} {...RULES_CONFIGS_FOR_FACTORY.sgCidrIcmp.to} />
-            }
+            tcpUdpComponent={<RulesBlockFactory {...RULES_CONFIGS_FOR_FACTORY.sgCidr.to} />}
+            icmpComponent={<RulesBlockFactory {...RULES_CONFIGS_FOR_FACTORY.sgCidrIcmp.to} />}
           />
         </div>
         <Spacer $space={100} $samespace />
         <div id={FQDN_TO_ID}>
           <GroupRulesNodeWrapper>
-            <RulesBlockFactory forceArrowsUpdate={forceArrowsUpdate} {...RULES_CONFIGS_FOR_FACTORY.sgFqdn.to} />
+            <RulesBlockFactory {...RULES_CONFIGS_FOR_FACTORY.sgFqdn.to} />
           </GroupRulesNodeWrapper>
         </div>
       </Styled.CardsCol>

@@ -1,2 +1,3 @@
 export * from './RulesBlocksFactory'
-export * from './RulesBlocksNonTransform'
+export * from './SgModalAndTypeSwitcher'
+export * from './DeleteManyModal'
