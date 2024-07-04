@@ -59,10 +59,6 @@ export const TransformBlockInner: FC<TTransformBlockInnerProps> = ({ onSelectCen
     rulesSgCidrIcmpTo.length,
   ])
 
-  const forceArrowsUpdate = () => {
-    setArrowsKey(Math.random())
-  }
-
   return (
     <Styled.CardsContainer id={CARDS_CONTAINER}>
       <Styled.CardsCol>

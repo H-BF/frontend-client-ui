@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import React, { FC, useState, useEffect, useCallback } from 'react'
-import { Result, Spin } from 'antd'
+import { Result, Spin, notification, Button } from 'antd'
+import { TrashSimple, MagnifyingGlass, X } from '@phosphor-icons/react'
 import { AxiosError } from 'axios'
 import { useSelector, useDispatch } from 'react-redux'
 import type { RootState } from 'store/store'
@@ -39,7 +40,9 @@ import {
   getSectionName,
 } from './utils'
 import { SelectCenterSgModal } from './atoms'
+import { SgModalAndTypeSwitcher, DeleteManyModal } from './organisms'
 import { RulesByType } from './populations'
+import { Styled } from './styled'
 
 type TRulesListProps = {
   typeId: string
@@ -47,12 +50,19 @@ type TRulesListProps = {
 
 export const RulesList: FC<TRulesListProps> = ({ typeId }) => {
   const dispatch = useDispatch()
+  const [api, contextHolder] = notification.useNotification()
 
   const [error, setError] = useState<TRequestError | undefined>()
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const [isChangeCenterSgModalVisible, setChangeCenterSgModalVisible] = useState<boolean>(false)
   const [pendingSg, setPendingSg] = useState<string>()
+
+  const [subType, setSubType] = useState<string>('TCP/UDP')
+
+  const [searchText, setSearchText] = useState('')
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
+  const [isModalDeleteOpen, setIsModalDeleteOpen] = useState<boolean>(false)
 
   const centerSg = useSelector((state: RootState) => state.centerSg.centerSg)
   const rulesSgSgFrom = useSelector((state: RootState) => state.rulesSgSg.rulesFrom)
@@ -68,6 +78,10 @@ export const RulesList: FC<TRulesListProps> = ({ typeId }) => {
   const rulesSgCidrTo = useSelector((state: RootState) => state.rulesSgCidr.rulesTo)
   const rulesSgCidrIcmpFrom = useSelector((state: RootState) => state.rulesSgCidrIcmp.rulesFrom)
   const rulesSgCidrIcmpTo = useSelector((state: RootState) => state.rulesSgCidrIcmp.rulesTo)
+
+  useEffect(() => {
+    setSubType('TCP/UDP')
+  }, [typeId])
 
   /* get available sg names */
   useEffect(() => {
@@ -236,17 +250,64 @@ export const RulesList: FC<TRulesListProps> = ({ typeId }) => {
     )
   }
 
+  const clearSelected = () => {
+    setSelectedRowKeys([])
+  }
+
+  const openNotification = (msg: string) => {
+    api.success({
+      message: msg,
+      placement: 'topRight',
+    })
+  }
+
   return (
     <>
       <Layouts.HeaderRow>
         <TitleWithNoMargins level={3}>{getSectionName(typeId)}</TitleWithNoMargins>
       </Layouts.HeaderRow>
+      <Layouts.ControlsRow>
+        <Layouts.ControlsRightSide>
+          {selectedRowKeys.length > 0 ? (
+            <>
+              <Styled.SelectedItemsText>Selected Rules: {selectedRowKeys.length}</Styled.SelectedItemsText>
+              <Button type="text" icon={<X size={16} color="#00000073" />} onClick={clearSelected} />
+            </>
+          ) : (
+            <SgModalAndTypeSwitcher
+              onSelectCenterSg={onSelectCenterSg}
+              subType={subType}
+              onSelectSubType={setSubType}
+            />
+          )}
+          <Layouts.Separator />
+          <Button
+            disabled={selectedRowKeys.length === 0}
+            type="text"
+            icon={<TrashSimple size={18} />}
+            onClick={() => setIsModalDeleteOpen(true)}
+          />
+        </Layouts.ControlsRightSide>
+        <Layouts.ControlsLeftSide>
+          <Layouts.SearchControl>
+            <Layouts.InputWithCustomPreffixMargin
+              allowClear
+              placeholder="Search"
+              prefix={<MagnifyingGlass color="#00000073" />}
+              value={searchText}
+              onChange={e => {
+                setSearchText(e.target.value)
+              }}
+            />
+          </Layouts.SearchControl>
+        </Layouts.ControlsLeftSide>
+      </Layouts.ControlsRow>
       {isLoading && (
         <MiddleContainer>
           <Spin />
         </MiddleContainer>
       )}
-      {!isLoading && <RulesByType typeId={typeId} onSelectCenterSg={onSelectCenterSg} />}
+      {!isLoading && <RulesByType typeId={typeId} subType={subType} />}
       <SelectCenterSgModal
         isOpen={isChangeCenterSgModalVisible}
         handleOk={() => {
@@ -256,6 +317,8 @@ export const RulesList: FC<TRulesListProps> = ({ typeId }) => {
         }}
         handleCancel={() => setChangeCenterSgModalVisible(false)}
       />
+      <DeleteManyModal open={isModalDeleteOpen} openNotification={openNotification} />
+      {contextHolder}
     </>
   )
 }

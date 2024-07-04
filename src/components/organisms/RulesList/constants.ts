@@ -1,10 +1,4 @@
-import { TooltipPlacement } from 'antd/es/tooltip'
 import { TRulesTypes, TRulesSubTypes } from 'localTypes/rules'
-
-export const VIEW_TYPE = {
-  simple: 'Simple',
-  overview: 'Overview',
-}
 
 type TRULES_CONFIGS = {
   [k: string]: {
@@ -34,38 +28,37 @@ type TRULES_CONFIGS_FOR_FACTORY = {
       type: TRulesTypes
       subtype: TRulesSubTypes
       title: string
-      popoverPosition: TooltipPlacement
     }
   }
 }
 
 export const RULES_CONFIGS_FOR_FACTORY: TRULES_CONFIGS_FOR_FACTORY = {
   sgSg: {
-    from: { type: 'sgSg', subtype: 'from', title: 'SG From', popoverPosition: 'left' },
-    to: { type: 'sgSg', subtype: 'to', title: 'SG To', popoverPosition: 'right' },
+    from: { type: 'sgSg', subtype: 'from', title: 'SG From' },
+    to: { type: 'sgSg', subtype: 'to', title: 'SG To' },
   },
   sgSgIcmp: {
-    from: { type: 'sgSgIcmp', subtype: 'from', title: 'SG-ICMP From', popoverPosition: 'left' },
-    to: { type: 'sgSgIcmp', subtype: 'to', title: 'SG-ICMP To', popoverPosition: 'right' },
+    from: { type: 'sgSgIcmp', subtype: 'from', title: 'SG-ICMP From' },
+    to: { type: 'sgSgIcmp', subtype: 'to', title: 'SG-ICMP To' },
   },
   sgSgIe: {
-    from: { type: 'sgSgIe', subtype: 'from', title: 'SG-IE From', popoverPosition: 'left' },
-    to: { type: 'sgSgIe', subtype: 'to', title: 'SG-IE To', popoverPosition: 'right' },
+    from: { type: 'sgSgIe', subtype: 'from', title: 'SG-IE From' },
+    to: { type: 'sgSgIe', subtype: 'to', title: 'SG-IE To' },
   },
   sgSgIeIcmp: {
-    from: { type: 'sgSgIeIcmp', subtype: 'from', title: 'SG-IE-ICMP From', popoverPosition: 'left' },
-    to: { type: 'sgSgIeIcmp', subtype: 'to', title: 'SG-IE-ICMP To', popoverPosition: 'right' },
+    from: { type: 'sgSgIeIcmp', subtype: 'from', title: 'SG-IE-ICMP From' },
+    to: { type: 'sgSgIeIcmp', subtype: 'to', title: 'SG-IE-ICMP To' },
   },
   sgFqdn: {
-    from: { type: 'sgFqdn', subtype: 'from', title: 'FQDN From', popoverPosition: 'left' },
-    to: { type: 'sgFqdn', subtype: 'to', title: 'FQDN To', popoverPosition: 'right' },
+    from: { type: 'sgFqdn', subtype: 'from', title: 'FQDN From' },
+    to: { type: 'sgFqdn', subtype: 'to', title: 'FQDN To' },
   },
   sgCidr: {
-    from: { type: 'sgCidr', subtype: 'from', title: 'CIDR From', popoverPosition: 'left' },
-    to: { type: 'sgCidr', subtype: 'to', title: 'CIDR To', popoverPosition: 'right' },
+    from: { type: 'sgCidr', subtype: 'from', title: 'CIDR From' },
+    to: { type: 'sgCidr', subtype: 'to', title: 'CIDR To' },
   },
   sgCidrIcmp: {
-    from: { type: 'sgCidrIcmp', subtype: 'from', title: 'CIDR-ICMP From', popoverPosition: 'left' },
-    to: { type: 'sgCidrIcmp', subtype: 'to', title: 'CIDR-ICMP To', popoverPosition: 'right' },
+    from: { type: 'sgCidrIcmp', subtype: 'from', title: 'CIDR-ICMP From' },
+    to: { type: 'sgCidrIcmp', subtype: 'to', title: 'CIDR-ICMP To' },
   },
 }

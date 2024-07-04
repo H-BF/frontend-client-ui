@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import { useParams } from 'react-router-dom'
-import { RulesEditorTemplate } from 'templates'
+import { BaseTemplate } from 'templates'
 import { RulesList } from 'components'
 
 export const RulesPage: FC = () => {
@@ -11,8 +11,8 @@ export const RulesPage: FC = () => {
   }
 
   return (
-    <RulesEditorTemplate>
+    <BaseTemplate>
       <RulesList typeId={typeId} />
-    </RulesEditorTemplate>
+    </BaseTemplate>
   )
 }
