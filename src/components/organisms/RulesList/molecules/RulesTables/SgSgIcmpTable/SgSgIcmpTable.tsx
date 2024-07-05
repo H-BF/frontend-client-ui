@@ -1,16 +1,18 @@
 /* eslint-disable max-lines-per-function */
 /* eslint-disable react/no-unstable-nested-components */
-import React, { FC, Key, useState, useEffect } from 'react'
+import React, { FC, Key, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from 'store/store'
 import { setRulesSgSgIcmpFrom, setRulesSgSgIcmpTo } from 'store/editor/rulesSgSgIcmp/rulesSgSgIcmp'
-import { Button, Popover, Table } from 'antd'
+import { Table } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { SearchOutlined } from '@ant-design/icons'
+import { TrashSimple, PencilSimpleLine } from '@phosphor-icons/react'
 import { ShortenedTextWithTooltip, ThWhiteSpaceNoWrap } from 'components/atoms'
 import { DEFAULT_PRIORITIES, STATUSES } from 'constants/rules'
 import { TRulesTables, TFormSgSgIcmpRule } from 'localTypes/rules'
-import { EditPopover } from '../../../atoms'
+import { TextAlignContainer, TinyButton } from 'components'
+import { EditModal } from '../../../atoms'
 import { getRowSelection, getDefaultTableProps } from '../utils'
 import { edit, remove, restore } from '../utils/editRemoveRestore/sgSgIcmp'
 import { FilterDropdown, ActionCell, LogsCell, TraceCell } from '../atoms'
@@ -32,7 +34,7 @@ export const SgSgIcmpTable: FC<TSgSgIcmpTableProps> = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [searchText, setSearchText] = useState('')
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([])
-  const [editOpen, setEditOpen] = useState<boolean[]>([])
+  const [editOpen, setEditOpen] = useState<TColumn | boolean>(false)
 
   const centerSg = useSelector((state: RootState) => state.centerSg.centerSg)
   const rulesSgSgIcmpFrom = useSelector((state: RootState) => state.rulesSgSgIcmp.rulesFrom)
@@ -43,47 +45,14 @@ export const SgSgIcmpTable: FC<TSgSgIcmpTableProps> = ({
   const rulesOtherside = direction === 'from' ? rulesSgSgIcmpTo : rulesSgSgIcmpFrom
   const setRulesOtherside = direction === 'from' ? setRulesSgSgIcmpTo : setRulesSgSgIcmpFrom
 
-  useEffect(() => {
-    setEditOpen(
-      Array(rulesData.filter(({ formChanges }) => formChanges?.status !== STATUSES.deleted).length).fill(false),
-    )
-  }, [rulesData, setEditOpen])
-
-  const toggleEditPopover = (index: number) => {
-    const newEditOpen = [...editOpen]
-    newEditOpen[index] = !newEditOpen[index]
-    setEditOpen(newEditOpen)
-  }
-
   /* remove newSgRulesOtherside as legacy after only ie-sg-sg will remain */
   const editRule = (oldValues: TFormSgSgIcmpRule, values: TFormSgSgIcmpRule) => {
-    edit(
-      dispatch,
-      rulesAll,
-      setRules,
-      rulesOtherside,
-      setRulesOtherside,
-      centerSg,
-      oldValues,
-      values,
-      toggleEditPopover,
-    )
+    edit(dispatch, rulesAll, setRules, rulesOtherside, setRulesOtherside, centerSg, oldValues, values)
   }
 
   /* remove newSgRulesOtherside as legacy after only ie-sg-sg will remain */
   const removeRule = (oldValues: TFormSgSgIcmpRule) => {
-    remove(
-      dispatch,
-      rulesAll,
-      setRules,
-      rulesOtherside,
-      setRulesOtherside,
-      centerSg,
-      oldValues,
-      editOpen,
-      setEditOpen,
-      toggleEditPopover,
-    )
+    remove(dispatch, rulesAll, setRules, rulesOtherside, setRulesOtherside, centerSg, oldValues)
   }
 
   /* remove newSgRulesOtherside as legacy after only ie-sg-sg will remain */
@@ -199,39 +168,35 @@ export const SgSgIcmpTable: FC<TSgSgIcmpTableProps> = ({
       ),
     },
     {
-      title: 'Controls',
+      title: '',
       key: 'controls',
-      width: 50,
-      render: (_, oldValues, index) => (
-        <>
-          {isRestoreButtonActive && (
-            <Button type="dashed" onClick={() => restoreRule(oldValues)}>
-              Restore
-            </Button>
+      align: 'right',
+      className: 'controls',
+      width: 84,
+      render: (_, oldValues) => (
+        <TextAlignContainer $align="right" className="hideable">
+          <TinyButton
+            type="text"
+            size="small"
+            onClick={() => setEditOpen(oldValues)}
+            icon={<PencilSimpleLine size={14} />}
+          />
+          {isRestoreButtonActive ? (
+            <TinyButton
+              type="text"
+              size="small"
+              onClick={() => removeRule(oldValues)}
+              icon={<TrashSimple size={14} />}
+            />
+          ) : (
+            <TinyButton
+              type="text"
+              size="small"
+              onClick={() => restoreRule(oldValues)}
+              icon={<TrashSimple size={14} />}
+            />
           )}
-          {!isRestoreButtonActive && (
-            <Popover
-              content={
-                <EditPopover<TFormSgSgIcmpRule>
-                  values={oldValues}
-                  remove={() => removeRule(oldValues)}
-                  hide={() => toggleEditPopover(index)}
-                  edit={values => editRule(oldValues, values)}
-                  {...RULES_CONFIGS.sgSgIcmp}
-                  defaultPrioritySome={DEFAULT_PRIORITIES.sgToSgIcmp}
-                  isDisabled={isDisabled}
-                />
-              }
-              title="SG SG ICMP"
-              trigger="click"
-              open={editOpen[index]}
-              onOpenChange={() => toggleEditPopover(index)}
-              className="no-scroll"
-            >
-              <Button type="primary">Edit</Button>
-            </Popover>
-          )}
-        </>
+        </TextAlignContainer>
       ),
     },
   ]
@@ -261,8 +226,23 @@ export const SgSgIcmpTable: FC<TSgSgIcmpTableProps> = ({
   const defaultTableProps = getDefaultTableProps()
 
   return (
-    <ThWhiteSpaceNoWrap>
-      <Table dataSource={dataSource} columns={columns} rowSelection={rowSelection} {...defaultTableProps} />
-    </ThWhiteSpaceNoWrap>
+    <>
+      <ThWhiteSpaceNoWrap>
+        <Table dataSource={dataSource} columns={columns} rowSelection={rowSelection} {...defaultTableProps} />
+      </ThWhiteSpaceNoWrap>
+      <EditModal<TFormSgSgIcmpRule>
+        direction={direction === 'from' ? 'Ingress' : 'Egress'}
+        values={editOpen}
+        hide={() => setEditOpen(false)}
+        edit={values => {
+          if (typeof editOpen !== 'boolean') {
+            editRule(editOpen, values)
+          }
+        }}
+        {...RULES_CONFIGS.sgSgIcmp}
+        defaultPrioritySome={DEFAULT_PRIORITIES.sgToSgIcmp}
+        isDisabled={isDisabled}
+      />
+    </>
   )
 }

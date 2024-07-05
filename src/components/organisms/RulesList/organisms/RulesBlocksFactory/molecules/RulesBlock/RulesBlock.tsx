@@ -1,17 +1,18 @@
 import React, { ReactElement, ReactNode, useState } from 'react'
 import { nanoid } from 'nanoid'
-import { Button, Popover } from 'antd'
+import { Button } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { ActionCreatorWithPayload } from '@reduxjs/toolkit'
 import { useDispatch } from 'react-redux'
 import { TitleWithNoTopMargin } from 'components/atoms'
 import { TTraffic } from 'localTypes/rules'
 import { STATUSES } from 'constants/rules'
-import { AddPopover } from '../../../../atoms'
+import { AddModal } from '../../../../atoms'
 
 type TRulesBlockProps<T> = {
   title: string
   table: ReactNode
+  direction: 'Ingress' | 'Egress'
   ruleConfig: {
     isSg?: boolean
     isFqdn?: boolean
@@ -36,6 +37,7 @@ type TRulesBlockProps<T> = {
 export const RulesBlock = <T extends { sg?: string; prioritySome?: string | number }>({
   title,
   table,
+  direction,
   rules,
   setRules,
   defaultTraffic,
@@ -45,12 +47,7 @@ export const RulesBlock = <T extends { sg?: string; prioritySome?: string | numb
   isDisabled,
 }: TRulesBlockProps<T>): ReactElement => {
   const [addOpen, setAddOpen] = useState(false)
-  const [editOpen, setEditOpen] = useState<boolean[]>([])
   const dispatch = useDispatch()
-
-  const toggleAddPopover = () => {
-    setAddOpen(!addOpen)
-  }
 
   const addNew = (values: T) => {
     dispatch(
@@ -89,32 +86,23 @@ export const RulesBlock = <T extends { sg?: string; prioritySome?: string | numb
       }
     }
     /* end of remove block */
-    setEditOpen([...editOpen, false])
-    toggleAddPopover()
   }
 
   return (
     <>
       <TitleWithNoTopMargin level={4}>{title}</TitleWithNoTopMargin>
       {table}
-      <Popover
-        content={
-          <AddPopover<T>
-            hide={toggleAddPopover}
-            addNew={addNew}
-            defaultPrioritySome={defaultPrioritySome}
-            {...ruleConfig}
-          />
-        }
-        title={title}
-        trigger="click"
+      <Button type="dashed" block icon={<PlusOutlined />} disabled={isDisabled}>
+        Add
+      </Button>
+      <AddModal<T>
         open={addOpen}
-        onOpenChange={toggleAddPopover}
-      >
-        <Button type="dashed" block icon={<PlusOutlined />} disabled={isDisabled}>
-          Add
-        </Button>
-      </Popover>
+        direction={direction}
+        hide={() => setAddOpen(false)}
+        addNew={addNew}
+        defaultPrioritySome={defaultPrioritySome}
+        {...ruleConfig}
+      />
     </>
   )
 }

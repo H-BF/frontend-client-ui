@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from 'react'
 import { ActionCreatorWithPayload, Dispatch as ReduxDispatch } from '@reduxjs/toolkit'
 import { STATUSES } from 'constants/rules'
 import { TFormSgSgIcmpRule } from 'localTypes/rules'
@@ -16,7 +15,6 @@ export const edit = (
   centerSg: string | undefined,
   oldValues: TFormSgSgIcmpRule,
   values: Omit<TFormSgSgIcmpRule, 'prioritySome'> & { prioritySome?: number | string },
-  toggleEditPopover: (index: number) => void,
 ): void => {
   const numberedPriorty = getNumberedPriorty(values.prioritySome)
   const newSgSgIcmpRules = [...rulesAll]
@@ -85,7 +83,6 @@ export const edit = (
   if (newSgSgSgIcmpRulesOthersideIndex) {
     dispatch(setRulesOtherside(newSgSgIcmpRulesOtherside))
   }
-  toggleEditPopover(index)
 }
 
 /* remove newSgRulesOtherside as legacy after only ie-sg-sg will remain */
@@ -97,16 +94,12 @@ export const remove = (
   setRulesOtherside: ActionCreatorWithPayload<TFormSgSgIcmpRule[]>,
   centerSg: string | undefined,
   oldValues: TFormSgSgIcmpRule,
-  editOpen: boolean[],
-  setEditOpen: Dispatch<SetStateAction<boolean[]>>,
-  toggleEditPopover: (index: number) => void,
 ): void => {
   const newSgSgIcmpRules = [...rulesAll]
   const index = newSgSgIcmpRules.findIndex(({ id }) => id === oldValues.id)
   const newSgSgIcmpRulesOtherside = [...rulesOtherside]
   /* legacy */
   const newSgSgSgIcmpRulesOthersideIndex = findSgSgIcmpPair(centerSg, oldValues, rulesOtherside)
-  const newEditOpenRules = [...editOpen]
   if (newSgSgIcmpRules[index].formChanges?.status === STATUSES.new) {
     dispatch(setRules([...newSgSgIcmpRules.slice(0, index), ...newSgSgIcmpRules.slice(index + 1)]))
     dispatch(
@@ -115,8 +108,6 @@ export const remove = (
         ...newSgSgIcmpRulesOtherside.slice(newSgSgSgIcmpRulesOthersideIndex + 1),
       ]),
     )
-    toggleEditPopover(index)
-    setEditOpen([...newEditOpenRules.slice(0, index), ...newEditOpenRules.slice(index + 1)])
   } else {
     newSgSgIcmpRules[index] = { ...newSgSgIcmpRules[index], formChanges: { status: STATUSES.deleted } }
     newSgSgIcmpRulesOtherside[newSgSgSgIcmpRulesOthersideIndex] = {
@@ -125,7 +116,6 @@ export const remove = (
     }
     dispatch(setRules(newSgSgIcmpRules))
     dispatch(setRulesOtherside(newSgSgIcmpRulesOtherside))
-    toggleEditPopover(index)
   }
 }
 

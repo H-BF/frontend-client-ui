@@ -39,8 +39,8 @@ import {
   checkIfChangesExist,
   getSectionName,
 } from './utils'
-import { SelectCenterSgModal } from './atoms'
-import { SgModalAndTypeSwitcher, DeleteManyModal } from './organisms'
+import { SelectCenterSgModal, DeleteManyModal } from './atoms'
+import { SgSelectAndTypeSwitcher } from './organisms'
 import { RulesByType } from './populations'
 import { Styled } from './styled'
 
@@ -79,6 +79,7 @@ export const RulesList: FC<TRulesListProps> = ({ typeId }) => {
   const rulesSgCidrIcmpFrom = useSelector((state: RootState) => state.rulesSgCidrIcmp.rulesFrom)
   const rulesSgCidrIcmpTo = useSelector((state: RootState) => state.rulesSgCidrIcmp.rulesTo)
 
+  /* return subtype if type is changed */
   useEffect(() => {
     setSubType('TCP/UDP')
   }, [typeId])
@@ -217,6 +218,14 @@ export const RulesList: FC<TRulesListProps> = ({ typeId }) => {
     fetchData()
   }, [centerSg, fetchData])
 
+  if (error) {
+    return (
+      <MiddleContainer>
+        <Result status="error" title={error.status} subTitle={error.data?.message} />
+      </MiddleContainer>
+    )
+  }
+
   /* show modal if some changes are not submitted */
   const onSelectCenterSg = (newSg?: string) => {
     const result = checkIfChangesExist([
@@ -240,14 +249,6 @@ export const RulesList: FC<TRulesListProps> = ({ typeId }) => {
     } else {
       dispatch(setCenterSg(newSg))
     }
-  }
-
-  if (error) {
-    return (
-      <MiddleContainer>
-        <Result status="error" title={error.status} subTitle={error.data?.message} />
-      </MiddleContainer>
-    )
   }
 
   const clearSelected = () => {
@@ -274,8 +275,9 @@ export const RulesList: FC<TRulesListProps> = ({ typeId }) => {
               <Button type="text" icon={<X size={16} color="#00000073" />} onClick={clearSelected} />
             </>
           ) : (
-            <SgModalAndTypeSwitcher
+            <SgSelectAndTypeSwitcher
               onSelectCenterSg={onSelectCenterSg}
+              typeId={typeId}
               subType={subType}
               onSelectSubType={setSubType}
             />

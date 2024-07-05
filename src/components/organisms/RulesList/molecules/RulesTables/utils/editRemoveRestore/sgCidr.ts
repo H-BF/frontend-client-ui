@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from 'react'
 import { ActionCreatorWithPayload, Dispatch as ReduxDispatch } from '@reduxjs/toolkit'
 import { STATUSES } from 'constants/rules'
 import { TFormSgCidrRule, TTraffic } from 'localTypes/rules'
@@ -12,7 +11,6 @@ export const edit = (
   defaultTraffic: TTraffic,
   oldValues: TFormSgCidrRule,
   values: Omit<TFormSgCidrRule, 'prioritySome'> & { prioritySome?: number | string },
-  toggleEditPopover: (index: number) => void,
 ): void => {
   const numberedPriorty = getNumberedPriorty(values.prioritySome)
   const newCidrSgRules = [...rulesAll]
@@ -50,7 +48,6 @@ export const edit = (
     }
   }
   dispatch(setRules(newCidrSgRules))
-  toggleEditPopover(index)
 }
 
 export const remove = (
@@ -58,24 +55,17 @@ export const remove = (
   rulesAll: TFormSgCidrRule[],
   setRules: ActionCreatorWithPayload<TFormSgCidrRule[]>,
   oldValues: TFormSgCidrRule,
-  editOpen: boolean[],
-  setEditOpen: Dispatch<SetStateAction<boolean[]>>,
-  toggleEditPopover: (index: number) => void,
 ): void => {
   const newCidrSgRules = [...rulesAll]
   const index = newCidrSgRules.findIndex(({ id }) => id === oldValues.id)
-  const newEditOpenRules = [...editOpen]
   if (newCidrSgRules[index].formChanges?.status === STATUSES.new) {
     dispatch(setRules([...newCidrSgRules.slice(0, index), ...newCidrSgRules.slice(index + 1)]))
-    toggleEditPopover(index)
-    setEditOpen([...newEditOpenRules.slice(0, index), ...newEditOpenRules.slice(index + 1)])
   } else {
     newCidrSgRules[index] = {
       ...newCidrSgRules[index],
       formChanges: { status: STATUSES.deleted, modifiedFields: newCidrSgRules[index].formChanges?.modifiedFields },
     }
     dispatch(setRules(newCidrSgRules))
-    toggleEditPopover(index)
   }
 }
 

@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from 'react'
 import { ActionCreatorWithPayload, Dispatch as ReduxDispatch } from '@reduxjs/toolkit'
 import { STATUSES } from 'constants/rules'
 import { TFormSgSgRule } from 'localTypes/rules'
@@ -16,7 +15,6 @@ export const edit = (
   centerSg: string | undefined,
   oldValues: TFormSgSgRule,
   values: Omit<TFormSgSgRule, 'prioritySome'> & { prioritySome?: number | string },
-  toggleEditPopover: (index: number) => void,
 ): void => {
   const numberedPriorty = getNumberedPriorty(values.prioritySome)
   const newSgRules = [...rulesAll]
@@ -85,7 +83,6 @@ export const edit = (
   if (newSgRulesOthersideIndex) {
     dispatch(setRulesOtherside(newSgRulesOtherside))
   }
-  toggleEditPopover(index)
 }
 
 /* remove newSgRulesOtherside as legacy after only ie-sg-sg will remain */
@@ -97,16 +94,12 @@ export const remove = (
   setRulesOtherside: ActionCreatorWithPayload<TFormSgSgRule[]>,
   centerSg: string | undefined,
   oldValues: TFormSgSgRule,
-  editOpen: boolean[],
-  setEditOpen: Dispatch<SetStateAction<boolean[]>>,
-  toggleEditPopover: (index: number) => void,
 ): void => {
   const newSgRules = [...rulesAll]
   const index = newSgRules.findIndex(({ id }) => id === oldValues.id)
   const newSgRulesOtherside = [...rulesOtherside]
   /* legacy */
   const newSgRulesOthersideIndex = findSgSgPair(centerSg, oldValues, rulesOtherside)
-  const newEditOpenRules = [...editOpen]
   if (newSgRules[index].formChanges?.status === STATUSES.new) {
     dispatch(setRules([...newSgRules.slice(0, index), ...newSgRules.slice(index + 1)]))
     dispatch(
@@ -115,8 +108,6 @@ export const remove = (
         ...newSgRulesOtherside.slice(newSgRulesOthersideIndex + 1),
       ]),
     )
-    toggleEditPopover(index)
-    setEditOpen([...newEditOpenRules.slice(0, index), ...newEditOpenRules.slice(index + 1)])
   } else {
     newSgRules[index] = { ...newSgRules[index], formChanges: { status: STATUSES.deleted } }
     newSgRulesOtherside[newSgRulesOthersideIndex] = {
@@ -125,7 +116,6 @@ export const remove = (
     }
     dispatch(setRules(newSgRules))
     dispatch(setRulesOtherside(newSgRulesOtherside))
-    toggleEditPopover(index)
   }
 }
 

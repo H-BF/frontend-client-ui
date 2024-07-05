@@ -1,14 +1,17 @@
 /* eslint-disable max-lines-per-function */
 import React, { ReactElement } from 'react'
-import { Button, Form, Input, Select, Switch } from 'antd'
-import { PlusCircleOutlined, CloseOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons'
+import { Modal, Form, Button, Input, Select, Switch } from 'antd'
+import { PlusOutlined, MinusOutlined } from '@ant-design/icons'
 import { useSelector } from 'react-redux'
 import type { RootState } from 'store/store'
 import { filterSgName } from 'utils/filterSgName'
 import { isCidrValid } from 'utils/isCidrValid'
+import { Spacer } from 'components'
 import { Styled } from './styled'
 
-type TAddPopoverProps<T> = {
+type TAddModalProps<T> = {
+  open: boolean
+  direction: 'Ingress' | 'Egress'
   hide: () => void
   addNew: (values: T) => void
   isSg?: boolean
@@ -21,7 +24,9 @@ type TAddPopoverProps<T> = {
   defaultPrioritySome?: string
 }
 
-export const AddPopover = <T,>({
+export const AddModal = <T,>({
+  open,
+  direction,
   hide,
   addNew,
   isSg,
@@ -32,21 +37,41 @@ export const AddPopover = <T,>({
   isIcmp,
   isTrace,
   defaultPrioritySome,
-}: TAddPopoverProps<T>): ReactElement | null => {
-  const [addForm] = Form.useForm()
+}: TAddModalProps<T>): ReactElement | null => {
+  const [form] = Form.useForm()
   const sgNames = useSelector((state: RootState) => state.sgNames.sgNames)
 
+  const submit = () => {
+    form
+      .validateFields()
+      .then(() => {
+        const values: T = form.getFieldsValue()
+        addNew(values)
+        hide()
+      })
+      // eslint-disable-next-line no-console
+      .catch(() => console.log('Validating error'))
+  }
+
   return (
-    <Styled.Container>
-      <Form
-        form={addForm}
-        onFinish={(values: T) => {
-          addNew(values)
-          addForm.resetFields()
-        }}
-      >
+    <Modal
+      title={`Add ${direction}`}
+      open={open}
+      onOk={() => submit()}
+      onCancel={() => {
+        hide()
+        form.resetFields()
+      }}
+      okText="Add"
+      okButtonProps={{
+        // TBD
+        disabled: true,
+      }}
+    >
+      <Spacer $space={16} $samespace />
+      <Form form={form}>
         {isSg && (
-          <Styled.FormItem label="Groups" name={['sg']} rules={[{ required: true, message: 'Missing SG Names' }]}>
+          <Form.Item label="Groups" name={['sg']} rules={[{ required: true, message: 'Missing SG Names' }]}>
             <Select
               showSearch
               placeholder="Select SG"
@@ -59,10 +84,10 @@ export const AddPopover = <T,>({
               }))}
               getPopupContainer={node => node.parentNode}
             />
-          </Styled.FormItem>
+          </Form.Item>
         )}
         {isFqdn && (
-          <Styled.FormItem
+          <Form.Item
             label="FQDN"
             name={['fqdn']}
             rules={[
@@ -75,10 +100,10 @@ export const AddPopover = <T,>({
             ]}
           >
             <Input placeholder="FQDN" />
-          </Styled.FormItem>
+          </Form.Item>
         )}
         {isCidr && (
-          <Styled.FormItem
+          <Form.Item
             label="CIDR"
             name="cidr"
             rules={[
@@ -94,7 +119,7 @@ export const AddPopover = <T,>({
             ]}
           >
             <Input placeholder="CIDR" />
-          </Styled.FormItem>
+          </Form.Item>
         )}
         {isPorts && (
           <Styled.PortsEditContainer>
@@ -103,12 +128,12 @@ export const AddPopover = <T,>({
                 <>
                   {fields.map(({ key, name, ...restField }) => (
                     <Styled.PortFormItemsContainer key={key}>
-                      <Styled.FormItem {...restField} name={[name, 's']} label="Source">
+                      <Form.Item {...restField} name={[name, 's']} label="Source">
                         <Input placeholder="Port source" />
-                      </Styled.FormItem>
-                      <Styled.FormItem {...restField} name={[name, 'd']} label="Destination">
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, 'd']} label="Destination">
                         <Input placeholder="Port destination" />
-                      </Styled.FormItem>
+                      </Form.Item>
                       <Button type="dashed" onClick={() => remove(name)} block icon={<MinusOutlined />}>
                         Remove ports
                       </Button>
@@ -125,7 +150,7 @@ export const AddPopover = <T,>({
           </Styled.PortsEditContainer>
         )}
         {isTransport && (
-          <Styled.FormItem
+          <Form.Item
             name="transport"
             label="Transport"
             hasFeedback
@@ -141,11 +166,11 @@ export const AddPopover = <T,>({
               ]}
               getPopupContainer={node => node.parentNode}
             />
-          </Styled.FormItem>
+          </Form.Item>
         )}
         {isIcmp && (
           <>
-            <Styled.FormItem
+            <Form.Item
               name="IPv"
               label="IPv"
               hasFeedback
@@ -161,8 +186,8 @@ export const AddPopover = <T,>({
                 ]}
                 getPopupContainer={node => node.parentNode}
               />
-            </Styled.FormItem>
-            <Styled.FormItem
+            </Form.Item>
+            <Form.Item
               label="Types"
               name="types"
               tooltip="Separator: space / coma"
@@ -190,18 +215,18 @@ export const AddPopover = <T,>({
                 // dropdownStyle={{ display: 'none' }}
                 maxTagCount="responsive"
               />
-            </Styled.FormItem>
+            </Form.Item>
           </>
         )}
-        <Styled.FormItem valuePropName="checked" name="logs" label="Logs">
+        <Form.Item valuePropName="checked" name="logs" label="Logs">
           <Switch />
-        </Styled.FormItem>
+        </Form.Item>
         {isTrace && (
-          <Styled.FormItem valuePropName="checked" name="trace" label="Trace">
+          <Form.Item valuePropName="checked" name="trace" label="Trace">
             <Switch />
-          </Styled.FormItem>
+          </Form.Item>
         )}
-        <Styled.FormItem
+        <Form.Item
           name="action"
           label="Action"
           hasFeedback
@@ -217,8 +242,8 @@ export const AddPopover = <T,>({
             ]}
             getPopupContainer={node => node.parentNode}
           />
-        </Styled.FormItem>
-        <Styled.FormItem
+        </Form.Item>
+        <Form.Item
           name="prioritySome"
           label="Priority"
           hasFeedback
@@ -243,26 +268,8 @@ export const AddPopover = <T,>({
           ]}
         >
           <Input placeholder={defaultPrioritySome || 'priority.some'} />
-        </Styled.FormItem>
-        <Styled.ButtonsContainer>
-          <Styled.ButtonWithRightMargin>
-            <Button
-              type="dashed"
-              block
-              icon={<CloseOutlined />}
-              onClick={() => {
-                hide()
-                addForm.resetFields()
-              }}
-            >
-              Cancel
-            </Button>
-          </Styled.ButtonWithRightMargin>
-          <Button type="primary" block icon={<PlusCircleOutlined />} htmlType="submit">
-            Add
-          </Button>
-        </Styled.ButtonsContainer>
+        </Form.Item>
       </Form>
-    </Styled.Container>
+    </Modal>
   )
 }

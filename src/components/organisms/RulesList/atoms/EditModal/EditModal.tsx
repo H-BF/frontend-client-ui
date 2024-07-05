@@ -1,17 +1,18 @@
 /* eslint-disable max-lines-per-function */
 import React, { ReactElement, useEffect } from 'react'
-import { Button, Form, Select, Input, Switch } from 'antd'
-import { PlusCircleOutlined, MinusCircleOutlined, CloseOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons'
+import { Modal, Form, Button, Select, Input, Switch } from 'antd'
+import { PlusOutlined, MinusOutlined } from '@ant-design/icons'
 import { useSelector } from 'react-redux'
 import type { RootState } from 'store/store'
 import { filterSgName } from 'utils/filterSgName'
 import { isCidrValid } from 'utils/isCidrValid'
+import { Spacer } from 'components'
 import { Styled } from './styled'
 
-type TEditPopoverProps<T> = {
-  values: T
+type TEditModalProps<T> = {
+  direction: 'Ingress' | 'Egress'
+  values: T | boolean
   hide: () => void
-  remove: () => void
   edit: (values: T) => void
   isSg?: boolean
   isFqdn?: boolean
@@ -24,10 +25,10 @@ type TEditPopoverProps<T> = {
   isDisabled?: boolean
 }
 
-export const EditPopover = <T,>({
+export const EditModal = <T,>({
+  direction,
   values,
   hide,
-  remove,
   edit,
   isSg,
   isFqdn,
@@ -38,19 +39,45 @@ export const EditPopover = <T,>({
   isTrace,
   defaultPrioritySome,
   isDisabled,
-}: TEditPopoverProps<T>): ReactElement => {
-  const [addForm] = Form.useForm()
+}: TEditModalProps<T>): ReactElement => {
+  const [form] = Form.useForm()
   const sgNames = useSelector((state: RootState) => state.sgNames.sgNames)
 
   useEffect(() => {
-    addForm.setFieldsValue(values)
-  }, [values, addForm])
+    form.setFieldsValue(values)
+  }, [values, form])
+
+  const submit = () => {
+    form
+      .validateFields()
+      .then(() => {
+        const values: T = form.getFieldsValue()
+        edit(values)
+        hide()
+      })
+      // eslint-disable-next-line no-console
+      .catch(() => console.log('Validating error'))
+  }
 
   return (
-    <Styled.Container>
-      <Form form={addForm} onFinish={(values: T) => edit(values)}>
+    <Modal
+      title={`Edit ${direction}`}
+      open={typeof values !== 'boolean'}
+      onOk={() => submit()}
+      onCancel={() => {
+        hide()
+        form.resetFields()
+      }}
+      okText="Add"
+      okButtonProps={{
+        // TBD
+        disabled: true,
+      }}
+    >
+      <Spacer $space={16} $samespace />
+      <Form form={form}>
         {isFqdn && (
-          <Styled.FormItem
+          <Form.Item
             label="FQDN"
             name={['fqdn']}
             rules={[
@@ -63,10 +90,10 @@ export const EditPopover = <T,>({
             ]}
           >
             <Input placeholder="FQDN" disabled />
-          </Styled.FormItem>
+          </Form.Item>
         )}
         {isCidr && (
-          <Styled.FormItem
+          <Form.Item
             label="CIDR"
             name="cidr"
             rules={[
@@ -82,10 +109,10 @@ export const EditPopover = <T,>({
             ]}
           >
             <Input placeholder="CIDR" disabled />
-          </Styled.FormItem>
+          </Form.Item>
         )}
         {isSg && (
-          <Styled.FormItem label="Groups" name={['sg']} rules={[{ required: true, message: 'Missing SG Name' }]}>
+          <Form.Item label="Groups" name={['sg']} rules={[{ required: true, message: 'Missing SG Name' }]}>
             <Select
               showSearch
               placeholder="Select SG"
@@ -99,7 +126,7 @@ export const EditPopover = <T,>({
               getPopupContainer={node => node.parentNode}
               disabled
             />
-          </Styled.FormItem>
+          </Form.Item>
         )}
         {isPorts && (
           <Styled.PortsEditContainer>
@@ -108,12 +135,12 @@ export const EditPopover = <T,>({
                 <>
                   {fields.map(({ key, name, ...restField }) => (
                     <Styled.PortFormItemsContainer key={key}>
-                      <Styled.FormItem {...restField} name={[name, 's']} label="Source">
+                      <Form.Item {...restField} name={[name, 's']} label="Source">
                         <Input placeholder="Port source" disabled={isDisabled} />
-                      </Styled.FormItem>
-                      <Styled.FormItem {...restField} name={[name, 'd']} label="Destination">
+                      </Form.Item>
+                      <Form.Item {...restField} name={[name, 'd']} label="Destination">
                         <Input placeholder="Port destination" disabled={isDisabled} />
-                      </Styled.FormItem>
+                      </Form.Item>
                       <Button
                         type="dashed"
                         disabled={isDisabled}
@@ -136,7 +163,7 @@ export const EditPopover = <T,>({
           </Styled.PortsEditContainer>
         )}
         {isTransport && (
-          <Styled.FormItem
+          <Form.Item
             name="transport"
             label="Transport"
             hasFeedback
@@ -153,11 +180,11 @@ export const EditPopover = <T,>({
               getPopupContainer={node => node.parentNode}
               disabled={isDisabled}
             />
-          </Styled.FormItem>
+          </Form.Item>
         )}
         {isIcmp && (
           <>
-            <Styled.FormItem
+            <Form.Item
               name="IPv"
               label="IPv"
               hasFeedback
@@ -174,8 +201,8 @@ export const EditPopover = <T,>({
                 getPopupContainer={node => node.parentNode}
                 disabled={isDisabled}
               />
-            </Styled.FormItem>
-            <Styled.FormItem
+            </Form.Item>
+            <Form.Item
               label="Types"
               name="types"
               tooltip="Separator: space / coma"
@@ -204,18 +231,18 @@ export const EditPopover = <T,>({
                 // dropdownStyle={{ display: 'none' }}
                 maxTagCount="responsive"
               />
-            </Styled.FormItem>
+            </Form.Item>
           </>
         )}
-        <Styled.FormItem valuePropName="checked" name="logs" label="Logs">
+        <Form.Item valuePropName="checked" name="logs" label="Logs">
           <Switch disabled={isDisabled} />
-        </Styled.FormItem>
+        </Form.Item>
         {isTrace && (
-          <Styled.FormItem valuePropName="checked" name="trace" label="Trace">
+          <Form.Item valuePropName="checked" name="trace" label="Trace">
             <Switch disabled={isDisabled} />
-          </Styled.FormItem>
+          </Form.Item>
         )}
-        <Styled.FormItem
+        <Form.Item
           name="action"
           label="Action"
           hasFeedback
@@ -232,8 +259,8 @@ export const EditPopover = <T,>({
             getPopupContainer={node => node.parentNode}
             disabled={isDisabled}
           />
-        </Styled.FormItem>
-        <Styled.FormItem
+        </Form.Item>
+        <Form.Item
           name="prioritySome"
           label="Priority"
           hasFeedback
@@ -258,32 +285,8 @@ export const EditPopover = <T,>({
           ]}
         >
           <Input placeholder={defaultPrioritySome || 'priority.some'} disabled={isDisabled} />
-        </Styled.FormItem>
-        <Styled.ButtonsContainer>
-          <Styled.ButtonWithRightMargin>
-            <Button type="dashed" block icon={<CloseOutlined />} onClick={hide}>
-              Cancel
-            </Button>
-          </Styled.ButtonWithRightMargin>
-          <Styled.ButtonWithRightMargin>
-            <Button
-              type="default"
-              block
-              icon={<MinusCircleOutlined />}
-              onClick={() => {
-                remove()
-                hide()
-              }}
-              disabled={isDisabled}
-            >
-              Remove
-            </Button>
-          </Styled.ButtonWithRightMargin>
-          <Button type="primary" block icon={<PlusCircleOutlined />} htmlType="submit" disabled={isDisabled}>
-            Save
-          </Button>
-        </Styled.ButtonsContainer>
+        </Form.Item>
       </Form>
-    </Styled.Container>
+    </Modal>
   )
 }

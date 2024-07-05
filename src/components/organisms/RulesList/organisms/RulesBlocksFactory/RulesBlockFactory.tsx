@@ -70,6 +70,7 @@ export const RulesBlockFactory: FC<TRulesBlockFactoryProps> = ({ title, isDisabl
           />
         }
         ruleConfig={RULES_CONFIGS.sgSg}
+        direction={subtype === 'from' ? 'Ingress' : 'Egress'}
         rules={subtype === 'from' ? rulesSgSgFrom : rulesSgSgTo}
         setRules={subtype === 'from' ? setRulesSgSgFrom : setRulesSgSgTo}
         legacyOptions={{
@@ -95,6 +96,7 @@ export const RulesBlockFactory: FC<TRulesBlockFactoryProps> = ({ title, isDisabl
           />
         }
         ruleConfig={RULES_CONFIGS.sgSgIcmp}
+        direction={subtype === 'from' ? 'Ingress' : 'Egress'}
         rules={subtype === 'from' ? rulesSgSgIcmpFrom : rulesSgSgIcmpTo}
         setRules={subtype === 'from' ? setRulesSgSgIcmpFrom : setRulesSgSgIcmpTo}
         legacyOptions={{
@@ -120,6 +122,7 @@ export const RulesBlockFactory: FC<TRulesBlockFactoryProps> = ({ title, isDisabl
           />
         }
         ruleConfig={RULES_CONFIGS.sgSgIe}
+        direction={subtype === 'from' ? 'Ingress' : 'Egress'}
         rules={subtype === 'from' ? rulesSgSgIeFrom : rulesSgSgIeTo}
         setRules={subtype === 'from' ? setRulesSgSgIeFrom : setRulesSgSgIeTo}
         defaultTraffic={subtype === 'from' ? 'Ingress' : 'Egress'}
@@ -141,6 +144,7 @@ export const RulesBlockFactory: FC<TRulesBlockFactoryProps> = ({ title, isDisabl
           />
         }
         ruleConfig={RULES_CONFIGS.sgSgIeIcmp}
+        direction={subtype === 'from' ? 'Ingress' : 'Egress'}
         rules={subtype === 'from' ? rulesSgSgIeIcmpFrom : rulesSgSgIeIcmpTo}
         setRules={subtype === 'from' ? setRulesSgSgIeIcmpFrom : setRulesSgSgIeIcmpTo}
         defaultTraffic={subtype === 'from' ? 'Ingress' : 'Egress'}
@@ -161,6 +165,7 @@ export const RulesBlockFactory: FC<TRulesBlockFactoryProps> = ({ title, isDisabl
           />
         }
         ruleConfig={RULES_CONFIGS.sgFqdn}
+        direction={subtype === 'from' ? 'Ingress' : 'Egress'}
         rules={subtype === 'from' ? [] : rulesSgFqdnTo}
         setRules={subtype === 'from' ? setRulesSgFqdnTo : setRulesSgFqdnTo}
         defaultPrioritySome={DEFAULT_PRIORITIES.sgToFqdn}
@@ -181,6 +186,7 @@ export const RulesBlockFactory: FC<TRulesBlockFactoryProps> = ({ title, isDisabl
           />
         }
         ruleConfig={RULES_CONFIGS.sgCidr}
+        direction={subtype === 'from' ? 'Ingress' : 'Egress'}
         rules={subtype === 'from' ? rulesSgCidrFrom : rulesSgCidrTo}
         setRules={subtype === 'from' ? setRulesSgCidrFrom : setRulesSgCidrTo}
         defaultTraffic={subtype === 'from' ? 'Ingress' : 'Egress'}
@@ -201,6 +207,7 @@ export const RulesBlockFactory: FC<TRulesBlockFactoryProps> = ({ title, isDisabl
         />
       }
       ruleConfig={RULES_CONFIGS.sgCidrIcmp}
+      direction={subtype === 'from' ? 'Ingress' : 'Egress'}
       rules={subtype === 'from' ? rulesSgCidrIcmpFrom : rulesSgCidrIcmpTo}
       setRules={subtype === 'from' ? setRulesSgCidrIcmpFrom : setRulesSgCidrIcmpTo}
       defaultTraffic={subtype === 'from' ? 'Ingress' : 'Egress'}

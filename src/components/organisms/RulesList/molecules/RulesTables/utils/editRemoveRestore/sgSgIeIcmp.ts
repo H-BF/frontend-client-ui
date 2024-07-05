@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from 'react'
 import { ActionCreatorWithPayload, Dispatch as ReduxDispatch } from '@reduxjs/toolkit'
 import { STATUSES } from 'constants/rules'
 import { TFormSgSgIeIcmpRule, TTraffic } from 'localTypes/rules'
@@ -12,7 +11,6 @@ export const edit = (
   defaultTraffic: TTraffic,
   oldValues: TFormSgSgIeIcmpRule,
   values: Omit<TFormSgSgIeIcmpRule, 'prioritySome'> & { prioritySome?: number | string },
-  toggleEditPopover: (index: number) => void,
 ): void => {
   const numberedPriorty = getNumberedPriorty(values.prioritySome)
   const newSgSgIeIcmpRules = [...rulesAll]
@@ -50,7 +48,6 @@ export const edit = (
     }
   }
   dispatch(setRules(newSgSgIeIcmpRules))
-  toggleEditPopover(index)
 }
 
 export const remove = (
@@ -58,24 +55,17 @@ export const remove = (
   rulesAll: TFormSgSgIeIcmpRule[],
   setRules: ActionCreatorWithPayload<TFormSgSgIeIcmpRule[]>,
   oldValues: TFormSgSgIeIcmpRule,
-  editOpen: boolean[],
-  setEditOpen: Dispatch<SetStateAction<boolean[]>>,
-  toggleEditPopover: (index: number) => void,
 ): void => {
   const newSgSgIeIcmpRules = [...rulesAll]
-  const newEditOpenRules = [...editOpen]
   const index = newSgSgIeIcmpRules.findIndex(({ id }) => id === oldValues.id)
   if (newSgSgIeIcmpRules[index].formChanges?.status === STATUSES.new) {
     dispatch(setRules([...newSgSgIeIcmpRules.slice(0, index), ...newSgSgIeIcmpRules.slice(index + 1)]))
-    toggleEditPopover(index)
-    setEditOpen([...newEditOpenRules.slice(0, index), ...newEditOpenRules.slice(index + 1)])
   } else {
     newSgSgIeIcmpRules[index] = {
       ...newSgSgIeIcmpRules[index],
       formChanges: { status: STATUSES.deleted },
     }
     dispatch(setRules(newSgSgIeIcmpRules))
-    toggleEditPopover(index)
   }
 }
 

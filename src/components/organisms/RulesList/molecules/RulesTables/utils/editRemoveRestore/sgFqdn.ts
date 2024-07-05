@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from 'react'
 import { ActionCreatorWithPayload, Dispatch as ReduxDispatch } from '@reduxjs/toolkit'
 import { STATUSES } from 'constants/rules'
 import { TFormSgFqdnRule } from 'localTypes/rules'
@@ -11,7 +10,6 @@ export const edit = (
   setRules: ActionCreatorWithPayload<TFormSgFqdnRule[]>,
   oldValues: TFormSgFqdnRule,
   values: Omit<TFormSgFqdnRule, 'prioritySome'> & { prioritySome?: number | string },
-  toggleEditPopover: (index: number) => void,
 ): void => {
   const numberedPriorty = getNumberedPriorty(values.prioritySome)
   const newFqdnRules = [...rulesAll]
@@ -47,7 +45,6 @@ export const edit = (
     }
   }
   dispatch(setRules(newFqdnRules))
-  toggleEditPopover(index)
 }
 
 export const remove = (
@@ -55,21 +52,14 @@ export const remove = (
   rulesAll: TFormSgFqdnRule[],
   setRules: ActionCreatorWithPayload<TFormSgFqdnRule[]>,
   oldValues: TFormSgFqdnRule,
-  editOpen: boolean[],
-  setEditOpen: Dispatch<SetStateAction<boolean[]>>,
-  toggleEditPopover: (index: number) => void,
 ): void => {
   const newFqdnRules = [...rulesAll]
   const index = newFqdnRules.findIndex(({ id }) => id === oldValues.id)
-  const newEditOpenRules = [...editOpen]
   if (newFqdnRules[index].formChanges?.status === STATUSES.new) {
     dispatch(setRules([...newFqdnRules.slice(0, index), ...newFqdnRules.slice(index + 1)]))
-    toggleEditPopover(index)
-    setEditOpen([...newEditOpenRules.slice(0, index), ...newEditOpenRules.slice(index + 1)])
   } else {
     newFqdnRules[index] = { ...newFqdnRules[index], formChanges: { status: STATUSES.deleted } }
     dispatch(setRules(newFqdnRules))
-    toggleEditPopover(index)
   }
 }
 

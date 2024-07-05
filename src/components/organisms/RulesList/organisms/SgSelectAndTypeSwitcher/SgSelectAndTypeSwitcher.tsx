@@ -4,14 +4,16 @@ import { useSelector } from 'react-redux'
 import type { RootState } from 'store/store'
 import { filterSgName } from 'utils/filterSgName'
 
-type TSgModalAndTypeSwitcherProps = {
+type TSgSelectAndTypeSwitcherProps = {
   onSelectCenterSg: (value?: string) => void
+  typeId: string
   subType: string
   onSelectSubType: Dispatch<SetStateAction<string>>
 }
 
-export const SgModalAndTypeSwitcher: FC<TSgModalAndTypeSwitcherProps> = ({
+export const SgSelectAndTypeSwitcher: FC<TSgSelectAndTypeSwitcherProps> = ({
   onSelectCenterSg,
+  typeId,
   subType,
   onSelectSubType,
 }) => {
@@ -41,7 +43,9 @@ export const SgModalAndTypeSwitcher: FC<TSgModalAndTypeSwitcherProps> = ({
           />
         </Form.Item>
       </Form>
-      <Segmented options={['TCP/UDP', 'ICMP']} value={subType} onChange={value => onSelectSubType(value as string)} />
+      {typeId !== 'sgFqdn' && (
+        <Segmented options={['TCP/UDP', 'ICMP']} value={subType} onChange={value => onSelectSubType(value as string)} />
+      )}
     </>
   )
 }
