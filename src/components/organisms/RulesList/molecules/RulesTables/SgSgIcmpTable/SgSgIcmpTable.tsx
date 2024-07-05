@@ -185,14 +185,14 @@ export const SgSgIcmpTable: FC<TSgSgIcmpTableProps> = ({
             <TinyButton
               type="text"
               size="small"
-              onClick={() => removeRule(oldValues)}
+              onClick={() => restoreRule(oldValues)}
               icon={<TrashSimple size={14} />}
             />
           ) : (
             <TinyButton
               type="text"
               size="small"
-              onClick={() => restoreRule(oldValues)}
+              onClick={() => removeRule(oldValues)}
               icon={<TrashSimple size={14} />}
             />
           )}

@@ -228,26 +228,28 @@ export const RulesList: FC<TRulesListProps> = ({ typeId }) => {
 
   /* show modal if some changes are not submitted */
   const onSelectCenterSg = (newSg?: string) => {
-    const result = checkIfChangesExist([
-      ...rulesSgSgFrom,
-      ...rulesSgSgTo,
-      ...rulesSgSgIcmpFrom,
-      ...rulesSgSgIcmpTo,
-      ...rulesSgSgIeFrom,
-      ...rulesSgSgIeTo,
-      ...rulesSgSgIeIcmpFrom,
-      ...rulesSgSgIeIcmpTo,
-      ...rulesSgFqdnTo,
-      ...rulesSgCidrFrom,
-      ...rulesSgCidrTo,
-      ...rulesSgCidrIcmpFrom,
-      ...rulesSgCidrIcmpTo,
-    ])
-    if (result) {
-      setPendingSg(newSg)
-      setChangeCenterSgModalVisible(true)
-    } else {
-      dispatch(setCenterSg(newSg))
+    if (newSg !== centerSg) {
+      const result = checkIfChangesExist([
+        ...rulesSgSgFrom,
+        ...rulesSgSgTo,
+        ...rulesSgSgIcmpFrom,
+        ...rulesSgSgIcmpTo,
+        ...rulesSgSgIeFrom,
+        ...rulesSgSgIeTo,
+        ...rulesSgSgIeIcmpFrom,
+        ...rulesSgSgIeIcmpTo,
+        ...rulesSgFqdnTo,
+        ...rulesSgCidrFrom,
+        ...rulesSgCidrTo,
+        ...rulesSgCidrIcmpFrom,
+        ...rulesSgCidrIcmpTo,
+      ])
+      if (result) {
+        setPendingSg(newSg)
+        setChangeCenterSgModalVisible(true)
+      } else {
+        dispatch(setCenterSg(newSg))
+      }
     }
   }
 
